@@ -7,420 +7,396 @@
   <style>
     * { box-sizing: border-box; }
 
-    html, body { margin: 0; padding: 0; }
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;          /* 스크롤 없이 한 화면에 담는다 */
+      background: #ffffff;
+    }
 
     body {
-      background: #ffffff;
       font-family: system-ui, -apple-system, "Segoe UI", Roboto,
                    "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
-      line-height: 1.5;
       -webkit-font-smoothing: antialiased;
     }
 
-    main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 3rem 1.5rem 4rem;
-    }
-
-    h1 {
-      font-size: 1.1rem;
-      font-weight: 600;
-      color: #111111;
-      margin: 0 0 0.35rem;
-    }
-
-    .subtitle {
-      font-size: 0.9rem;
-      color: #777777;
-      margin: 0 0 2.5rem;
-    }
-
-    ul {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1.75rem 1.25rem;
-      list-style: none;
-      margin: 0;
-      padding: 0;
-    }
-
-    li {
+    .word {
+      position: absolute;
+      transform: translate(-50%, -50%) rotate(var(--tilt));
       display: flex;
       flex-direction: column;
-      gap: 0.3rem;
-      min-width: 0;
-    }
-
-    /* 2초에 걸쳐 검은색에서 빨간색으로, 다시 2초에 걸쳐 검은색으로 */
-    .greeting {
-      font-size: 1.5rem;
-      font-weight: 600;
-      overflow-wrap: anywhere;
+      align-items: center;
+      gap: 0.1em;
+      white-space: nowrap;
+      line-height: 1.15;
       color: #000000;
-      animation: black-to-red 4s ease-in-out infinite;
+      animation: one-at-a-time 168s steps(1, end) infinite;
     }
 
-    @keyframes black-to-red {
-      0%   { color: #000000; }
-      50%  { color: #e01b24; }
-      100% { color: #000000; }
+    /* 양 끝 열은 화면 밖으로 나가지 않게 안쪽으로 정렬 */
+    .word.edge-left { transform: translate(0, -50%) rotate(var(--tilt)); align-items: flex-start; }
+    .word.edge-right { transform: translate(0, -50%) rotate(var(--tilt)); align-items: flex-end; }
+
+    .greeting {
+      font-size: clamp(0.6rem, 1.55vmin, 1.15rem);
+      font-weight: 600;
     }
 
     .language {
-      font-size: 0.8rem;
-      color: #888888;
+      font-size: clamp(0.42rem, 0.95vmin, 0.7rem);
+      opacity: 0.55;
     }
 
-    /* 화면 움직임을 줄이도록 설정한 사용자에게는 색을 고정한다 */
+    /* 한 바퀴(168초) 중 각 나라가 2초 동안만 빨간색이 된다.
+       나라마다 시작 시점을 2초씩 어긋나게 두어 언제나 한 나라만 빨갛다. */
+    @keyframes one-at-a-time {
+      0% { color: #e01b24; }
+      1.1905% { color: #000000; }
+      100% { color: #000000; }
+    }
+
     @media (prefers-reduced-motion: reduce) {
-      .greeting { animation: none; }
+      .word { animation: none; }
     }
   </style>
 </head>
 <body>
-  <main>
-    <h1>세계의 인사말</h1>
-    <p class="subtitle">84개 언어</p>
-
-    <ul>
-      <li>
-        <span class="greeting" dir="auto">안녕하세요</span>
-        <span class="language" dir="auto">한국어</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Hello</span>
-        <span class="language" dir="auto">English</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">こんにちは</span>
-        <span class="language" dir="auto">日本語</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">你好</span>
-        <span class="language" dir="auto">中文</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Hola</span>
-        <span class="language" dir="auto">Español</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Bonjour</span>
-        <span class="language" dir="auto">Français</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Hallo</span>
-        <span class="language" dir="auto">Deutsch</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Ciao</span>
-        <span class="language" dir="auto">Italiano</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Olá</span>
-        <span class="language" dir="auto">Português</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Здравствуйте</span>
-        <span class="language" dir="auto">Русский</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">مرحبا</span>
-        <span class="language" dir="auto">العربية</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">नमस्ते</span>
-        <span class="language" dir="auto">हिन्दी</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">নমস্কার</span>
-        <span class="language" dir="auto">বাংলা</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">สวัสดี</span>
-        <span class="language" dir="auto">ไทย</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Xin chào</span>
-        <span class="language" dir="auto">Tiếng Việt</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Halo</span>
-        <span class="language" dir="auto">Bahasa Indonesia</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Helo</span>
-        <span class="language" dir="auto">Bahasa Melayu</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Kumusta</span>
-        <span class="language" dir="auto">Filipino</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Merhaba</span>
-        <span class="language" dir="auto">Türkçe</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Γειά σου</span>
-        <span class="language" dir="auto">Ελληνικά</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Hallo</span>
-        <span class="language" dir="auto">Nederlands</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Hej</span>
-        <span class="language" dir="auto">Svenska</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Hei</span>
-        <span class="language" dir="auto">Norsk</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Hej</span>
-        <span class="language" dir="auto">Dansk</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Hei</span>
-        <span class="language" dir="auto">Suomi</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Halló</span>
-        <span class="language" dir="auto">Íslenska</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Cześć</span>
-        <span class="language" dir="auto">Polski</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Ahoj</span>
-        <span class="language" dir="auto">Čeština</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Ahoj</span>
-        <span class="language" dir="auto">Slovenčina</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Szia</span>
-        <span class="language" dir="auto">Magyar</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Bună</span>
-        <span class="language" dir="auto">Română</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Здравейте</span>
-        <span class="language" dir="auto">Български</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Привіт</span>
-        <span class="language" dir="auto">Українська</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Bok</span>
-        <span class="language" dir="auto">Hrvatski</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Здраво</span>
-        <span class="language" dir="auto">Српски</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Živjo</span>
-        <span class="language" dir="auto">Slovenščina</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Labas</span>
-        <span class="language" dir="auto">Lietuvių</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Sveiki</span>
-        <span class="language" dir="auto">Latviešu</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Tere</span>
-        <span class="language" dir="auto">Eesti</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">שלום</span>
-        <span class="language" dir="auto">עברית</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">سلام</span>
-        <span class="language" dir="auto">فارسی</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">السلام علیکم</span>
-        <span class="language" dir="auto">اردو</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">வணக்கம்</span>
-        <span class="language" dir="auto">தமிழ்</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">నమస్కారం</span>
-        <span class="language" dir="auto">తెలుగు</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">ನಮಸ್ಕಾರ</span>
-        <span class="language" dir="auto">ಕನ್ನಡ</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">നമസ്കാരം</span>
-        <span class="language" dir="auto">മലയാളം</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">નમસ્તે</span>
-        <span class="language" dir="auto">ગુજરાતી</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">ਸਤ ਸ੍ਰੀ ਅਕਾਲ</span>
-        <span class="language" dir="auto">ਪੰਜਾਬੀ</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">नमस्कार</span>
-        <span class="language" dir="auto">मराठी</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">नमस्ते</span>
-        <span class="language" dir="auto">नेपाली</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">ආයුබෝවන්</span>
-        <span class="language" dir="auto">සිංහල</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">မင်္ဂလာပါ</span>
-        <span class="language" dir="auto">မြန်မာ</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">សួស្តី</span>
-        <span class="language" dir="auto">ភាសាខ្មែរ</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">ສະບາຍດີ</span>
-        <span class="language" dir="auto">ລາວ</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Сайн байна уу</span>
-        <span class="language" dir="auto">Монгол</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Jambo</span>
-        <span class="language" dir="auto">Kiswahili</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">ሰላም</span>
-        <span class="language" dir="auto">አማርኛ</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Bawo ni</span>
-        <span class="language" dir="auto">Yorùbá</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Sawubona</span>
-        <span class="language" dir="auto">isiZulu</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Hallo</span>
-        <span class="language" dir="auto">Afrikaans</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Sannu</span>
-        <span class="language" dir="auto">Hausa</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Salaan</span>
-        <span class="language" dir="auto">Soomaali</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Salama</span>
-        <span class="language" dir="auto">Malagasy</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Hola</span>
-        <span class="language" dir="auto">Català</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Kaixo</span>
-        <span class="language" dir="auto">Euskara</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Ola</span>
-        <span class="language" dir="auto">Galego</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Dia duit</span>
-        <span class="language" dir="auto">Gaeilge</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Helo</span>
-        <span class="language" dir="auto">Cymraeg</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Halò</span>
-        <span class="language" dir="auto">Gàidhlig</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Përshëndetje</span>
-        <span class="language" dir="auto">Shqip</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Здраво</span>
-        <span class="language" dir="auto">Македонски</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Բարև</span>
-        <span class="language" dir="auto">Հայերեն</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">გამარჯობა</span>
-        <span class="language" dir="auto">ქართული</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Salam</span>
-        <span class="language" dir="auto">Azərbaycan</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Сәлеметсіз бе</span>
-        <span class="language" dir="auto">Қазақ</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Salom</span>
-        <span class="language" dir="auto">Oʻzbek</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Salam</span>
-        <span class="language" dir="auto">Türkmen</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Saluton</span>
-        <span class="language" dir="auto">Esperanto</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Salve</span>
-        <span class="language" dir="auto">Latina</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Aloha</span>
-        <span class="language" dir="auto">ʻŌlelo Hawaiʻi</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Kia ora</span>
-        <span class="language" dir="auto">Te Reo Māori</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Talofa</span>
-        <span class="language" dir="auto">Gagana Sāmoa</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Bula</span>
-        <span class="language" dir="auto">Na Vosa Vakaviti</span>
-      </li>
-      <li>
-        <span class="greeting" dir="auto">Mālō e lelei</span>
-        <span class="language" dir="auto">Lea faka-Tonga</span>
-      </li>
-    </ul>
-  </main>
+    <div class="word" style="left:22.90%; top:79.10%; --tilt:-0.7deg; animation-delay:-24s">
+      <span class="greeting" dir="auto">안녕하세요</span>
+      <span class="language" dir="auto">한국어</span>
+    </div>
+    <div class="word" style="left:13.48%; top:77.91%; --tilt:-3.3deg; animation-delay:0s">
+      <span class="greeting" dir="auto">Hello</span>
+      <span class="language" dir="auto">English</span>
+    </div>
+    <div class="word" style="left:45.41%; top:52.32%; --tilt:6.9deg; animation-delay:-118s">
+      <span class="greeting" dir="auto">こんにちは</span>
+      <span class="language" dir="auto">日本語</span>
+    </div>
+    <div class="word" style="left:53.55%; top:65.56%; --tilt:-5.8deg; animation-delay:-156s">
+      <span class="greeting" dir="auto">你好</span>
+      <span class="language" dir="auto">中文</span>
+    </div>
+    <div class="word" style="left:30.18%; top:88.64%; --tilt:-5.6deg; animation-delay:-82s">
+      <span class="greeting" dir="auto">Hola</span>
+      <span class="language" dir="auto">Español</span>
+    </div>
+    <div class="word edge-left" style="left:1.5%; top:39.41%; --tilt:2.4deg; animation-delay:-14s">
+      <span class="greeting" dir="auto">Bonjour</span>
+      <span class="language" dir="auto">Français</span>
+    </div>
+    <div class="word" style="left:22.86%; top:88.36%; --tilt:3.6deg; animation-delay:-42s">
+      <span class="greeting" dir="auto">Hallo</span>
+      <span class="language" dir="auto">Deutsch</span>
+    </div>
+    <div class="word" style="left:10.20%; top:36.18%; --tilt:1.6deg; animation-delay:-52s">
+      <span class="greeting" dir="auto">Ciao</span>
+      <span class="language" dir="auto">Italiano</span>
+    </div>
+    <div class="word" style="left:52.91%; top:78.65%; --tilt:0.0deg; animation-delay:-92s">
+      <span class="greeting" dir="auto">Olá</span>
+      <span class="language" dir="auto">Português</span>
+    </div>
+    <div class="word" style="left:37.31%; top:74.70%; --tilt:-0.4deg; animation-delay:-146s">
+      <span class="greeting" dir="auto">Здравствуйте</span>
+      <span class="language" dir="auto">Русский</span>
+    </div>
+    <div class="word" style="left:61.62%; top:89.13%; --tilt:0.2deg; animation-delay:-86s">
+      <span class="greeting" dir="auto">مرحبا</span>
+      <span class="language" dir="auto">العربية</span>
+    </div>
+    <div class="word edge-left" style="left:1.5%; top:9.43%; --tilt:-6.6deg; animation-delay:-44s">
+      <span class="greeting" dir="auto">नमस्ते</span>
+      <span class="language" dir="auto">हिन्दी</span>
+    </div>
+    <div class="word" style="left:12.58%; top:47.64%; --tilt:-3.0deg; animation-delay:-28s">
+      <span class="greeting" dir="auto">নমস্কার</span>
+      <span class="language" dir="auto">বাংলা</span>
+    </div>
+    <div class="word" style="left:63.18%; top:74.82%; --tilt:-2.4deg; animation-delay:-124s">
+      <span class="greeting" dir="auto">สวัสดี</span>
+      <span class="language" dir="auto">ไทย</span>
+    </div>
+    <div class="word" style="left:86.53%; top:76.08%; --tilt:1.2deg; animation-delay:-88s">
+      <span class="greeting" dir="auto">Xin chào</span>
+      <span class="language" dir="auto">Tiếng Việt</span>
+    </div>
+    <div class="word" style="left:37.07%; top:25.18%; --tilt:0.9deg; animation-delay:-20s">
+      <span class="greeting" dir="auto">Halo</span>
+      <span class="language" dir="auto">Bahasa Indonesia</span>
+    </div>
+    <div class="word" style="left:35.12%; top:11.10%; --tilt:4.3deg; animation-delay:-114s">
+      <span class="greeting" dir="auto">Helo</span>
+      <span class="language" dir="auto">Bahasa Melayu</span>
+    </div>
+    <div class="word" style="left:78.37%; top:92.31%; --tilt:5.2deg; animation-delay:-154s">
+      <span class="greeting" dir="auto">Kumusta</span>
+      <span class="language" dir="auto">Filipino</span>
+    </div>
+    <div class="word" style="left:79.85%; top:9.10%; --tilt:-6.9deg; animation-delay:-60s">
+      <span class="greeting" dir="auto">Merhaba</span>
+      <span class="language" dir="auto">Türkçe</span>
+    </div>
+    <div class="word edge-left" style="left:1.5%; top:26.25%; --tilt:5.1deg; animation-delay:-132s">
+      <span class="greeting" dir="auto">Γειά σου</span>
+      <span class="language" dir="auto">Ελληνικά</span>
+    </div>
+    <div class="word" style="left:19.32%; top:49.32%; --tilt:0.2deg; animation-delay:-158s">
+      <span class="greeting" dir="auto">Hallo</span>
+      <span class="language" dir="auto">Nederlands</span>
+    </div>
+    <div class="word" style="left:80.67%; top:60.99%; --tilt:2.9deg; animation-delay:-64s">
+      <span class="greeting" dir="auto">Hej</span>
+      <span class="language" dir="auto">Svenska</span>
+    </div>
+    <div class="word" style="left:69.13%; top:49.95%; --tilt:-5.2deg; animation-delay:-140s">
+      <span class="greeting" dir="auto">Hei</span>
+      <span class="language" dir="auto">Norsk</span>
+    </div>
+    <div class="word" style="left:78.03%; top:34.55%; --tilt:0.9deg; animation-delay:-104s">
+      <span class="greeting" dir="auto">Hej</span>
+      <span class="language" dir="auto">Dansk</span>
+    </div>
+    <div class="word" style="left:39.70%; top:65.56%; --tilt:4.8deg; animation-delay:-142s">
+      <span class="greeting" dir="auto">Hei</span>
+      <span class="language" dir="auto">Suomi</span>
+    </div>
+    <div class="word" style="left:87.29%; top:23.21%; --tilt:-5.6deg; animation-delay:-16s">
+      <span class="greeting" dir="auto">Halló</span>
+      <span class="language" dir="auto">Íslenska</span>
+    </div>
+    <div class="word" style="left:31.31%; top:61.29%; --tilt:-5.2deg; animation-delay:-150s">
+      <span class="greeting" dir="auto">Cześć</span>
+      <span class="language" dir="auto">Polski</span>
+    </div>
+    <div class="word" style="left:80.54%; top:26.48%; --tilt:-5.4deg; animation-delay:-74s">
+      <span class="greeting" dir="auto">Ahoj</span>
+      <span class="language" dir="auto">Čeština</span>
+    </div>
+    <div class="word" style="left:44.92%; top:38.98%; --tilt:-0.8deg; animation-delay:-166s">
+      <span class="greeting" dir="auto">Ahoj</span>
+      <span class="language" dir="auto">Slovenčina</span>
+    </div>
+    <div class="word" style="left:18.96%; top:21.37%; --tilt:-1.6deg; animation-delay:-106s">
+      <span class="greeting" dir="auto">Szia</span>
+      <span class="language" dir="auto">Magyar</span>
+    </div>
+    <div class="word" style="left:44.37%; top:22.16%; --tilt:2.6deg; animation-delay:-94s">
+      <span class="greeting" dir="auto">Bună</span>
+      <span class="language" dir="auto">Română</span>
+    </div>
+    <div class="word" style="left:70.53%; top:65.01%; --tilt:-6.6deg; animation-delay:-18s">
+      <span class="greeting" dir="auto">Здравейте</span>
+      <span class="language" dir="auto">Български</span>
+    </div>
+    <div class="word" style="left:72.22%; top:12.21%; --tilt:-4.2deg; animation-delay:-4s">
+      <span class="greeting" dir="auto">Привіт</span>
+      <span class="language" dir="auto">Українська</span>
+    </div>
+    <div class="word" style="left:52.18%; top:90.54%; --tilt:1.3deg; animation-delay:-72s">
+      <span class="greeting" dir="auto">Bok</span>
+      <span class="language" dir="auto">Hrvatski</span>
+    </div>
+    <div class="word edge-right" style="right:1.5%; top:24.31%; --tilt:-6.5deg; animation-delay:-98s">
+      <span class="greeting" dir="auto">Здраво</span>
+      <span class="language" dir="auto">Српски</span>
+    </div>
+    <div class="word" style="left:43.84%; top:87.15%; --tilt:-4.5deg; animation-delay:-134s">
+      <span class="greeting" dir="auto">Živjo</span>
+      <span class="language" dir="auto">Slovenščina</span>
+    </div>
+    <div class="word edge-right" style="right:1.5%; top:74.89%; --tilt:0.9deg; animation-delay:-122s">
+      <span class="greeting" dir="auto">Labas</span>
+      <span class="language" dir="auto">Lietuvių</span>
+    </div>
+    <div class="word" style="left:69.18%; top:87.40%; --tilt:-1.3deg; animation-delay:-78s">
+      <span class="greeting" dir="auto">Sveiki</span>
+      <span class="language" dir="auto">Latviešu</span>
+    </div>
+    <div class="word" style="left:62.72%; top:11.00%; --tilt:-0.3deg; animation-delay:-90s">
+      <span class="greeting" dir="auto">Tere</span>
+      <span class="language" dir="auto">Eesti</span>
+    </div>
+    <div class="word" style="left:38.60%; top:89.09%; --tilt:3.9deg; animation-delay:-58s">
+      <span class="greeting" dir="auto">שלום</span>
+      <span class="language" dir="auto">עברית</span>
+    </div>
+    <div class="word edge-left" style="left:1.5%; top:75.77%; --tilt:-6.3deg; animation-delay:-102s">
+      <span class="greeting" dir="auto">سلام</span>
+      <span class="language" dir="auto">فارسی</span>
+    </div>
+    <div class="word" style="left:19.11%; top:11.60%; --tilt:2.9deg; animation-delay:-144s">
+      <span class="greeting" dir="auto">السلام علیکم</span>
+      <span class="language" dir="auto">اردو</span>
+    </div>
+    <div class="word" style="left:79.68%; top:78.32%; --tilt:-0.5deg; animation-delay:-6s">
+      <span class="greeting" dir="auto">வணக்கம்</span>
+      <span class="language" dir="auto">தமிழ்</span>
+    </div>
+    <div class="word edge-left" style="left:1.5%; top:50.51%; --tilt:3.7deg; animation-delay:-108s">
+      <span class="greeting" dir="auto">నమస్కారం</span>
+      <span class="language" dir="auto">తెలుగు</span>
+    </div>
+    <div class="word" style="left:47.61%; top:74.29%; --tilt:-2.5deg; animation-delay:-62s">
+      <span class="greeting" dir="auto">ನಮಸ್ಕಾರ</span>
+      <span class="language" dir="auto">ಕನ್ನಡ</span>
+    </div>
+    <div class="word" style="left:45.63%; top:10.28%; --tilt:0.9deg; animation-delay:-30s">
+      <span class="greeting" dir="auto">നമസ്കാരം</span>
+      <span class="language" dir="auto">മലയാളം</span>
+    </div>
+    <div class="word" style="left:43.47%; top:63.97%; --tilt:6.2deg; animation-delay:-112s">
+      <span class="greeting" dir="auto">નમસ્તે</span>
+      <span class="language" dir="auto">ગુજરાતી</span>
+    </div>
+    <div class="word" style="left:30.97%; top:52.91%; --tilt:-2.8deg; animation-delay:-2s">
+      <span class="greeting" dir="auto">ਸਤ ਸ੍ਰੀ ਅਕਾਲ</span>
+      <span class="language" dir="auto">ਪੰਜਾਬੀ</span>
+    </div>
+    <div class="word" style="left:60.46%; top:20.91%; --tilt:-6.7deg; animation-delay:-34s">
+      <span class="greeting" dir="auto">नमस्कार</span>
+      <span class="language" dir="auto">मराठी</span>
+    </div>
+    <div class="word" style="left:69.43%; top:23.55%; --tilt:3.1deg; animation-delay:-40s">
+      <span class="greeting" dir="auto">नमस्ते</span>
+      <span class="language" dir="auto">नेपाली</span>
+    </div>
+    <div class="word" style="left:56.50%; top:39.75%; --tilt:-6.2deg; animation-delay:-56s">
+      <span class="greeting" dir="auto">ආයුබෝවන්</span>
+      <span class="language" dir="auto">සිංහල</span>
+    </div>
+    <div class="word" style="left:39.03%; top:47.97%; --tilt:1.6deg; animation-delay:-48s">
+      <span class="greeting" dir="auto">မင်္ဂလာပါ</span>
+      <span class="language" dir="auto">မြန်မာ</span>
+    </div>
+    <div class="word" style="left:21.44%; top:61.42%; --tilt:1.1deg; animation-delay:-54s">
+      <span class="greeting" dir="auto">សួស្តី</span>
+      <span class="language" dir="auto">ភាសាខ្មែរ</span>
+    </div>
+    <div class="word" style="left:13.54%; top:12.26%; --tilt:2.6deg; animation-delay:-136s">
+      <span class="greeting" dir="auto">ສະບາຍດີ</span>
+      <span class="language" dir="auto">ລາວ</span>
+    </div>
+    <div class="word" style="left:54.57%; top:8.65%; --tilt:-5.5deg; animation-delay:-126s">
+      <span class="greeting" dir="auto">Сайн байна уу</span>
+      <span class="language" dir="auto">Монгол</span>
+    </div>
+    <div class="word edge-right" style="right:1.5%; top:62.28%; --tilt:-6.3deg; animation-delay:-84s">
+      <span class="greeting" dir="auto">Jambo</span>
+      <span class="language" dir="auto">Kiswahili</span>
+    </div>
+    <div class="word edge-left" style="left:1.5%; top:63.56%; --tilt:5.1deg; animation-delay:-70s">
+      <span class="greeting" dir="auto">ሰላም</span>
+      <span class="language" dir="auto">አማርኛ</span>
+    </div>
+    <div class="word" style="left:61.08%; top:50.27%; --tilt:-3.0deg; animation-delay:-66s">
+      <span class="greeting" dir="auto">Bawo ni</span>
+      <span class="language" dir="auto">Yorùbá</span>
+    </div>
+    <div class="word" style="left:86.40%; top:10.49%; --tilt:3.6deg; animation-delay:-164s">
+      <span class="greeting" dir="auto">Sawubona</span>
+      <span class="language" dir="auto">isiZulu</span>
+    </div>
+    <div class="word" style="left:87.90%; top:90.73%; --tilt:-2.4deg; animation-delay:-100s">
+      <span class="greeting" dir="auto">Hallo</span>
+      <span class="language" dir="auto">Afrikaans</span>
+    </div>
+    <div class="word edge-right" style="right:1.5%; top:87.04%; --tilt:3.3deg; animation-delay:-128s">
+      <span class="greeting" dir="auto">Sannu</span>
+      <span class="language" dir="auto">Hausa</span>
+    </div>
+    <div class="word" style="left:80.34%; top:50.17%; --tilt:4.6deg; animation-delay:-68s">
+      <span class="greeting" dir="auto">Salaan</span>
+      <span class="language" dir="auto">Soomaali</span>
+    </div>
+    <div class="word" style="left:56.55%; top:22.86%; --tilt:4.0deg; animation-delay:-96s">
+      <span class="greeting" dir="auto">Salama</span>
+      <span class="language" dir="auto">Malagasy</span>
+    </div>
+    <div class="word" style="left:68.89%; top:34.66%; --tilt:-5.8deg; animation-delay:-32s">
+      <span class="greeting" dir="auto">Hola</span>
+      <span class="language" dir="auto">Català</span>
+    </div>
+    <div class="word" style="left:60.40%; top:35.70%; --tilt:1.7deg; animation-delay:-110s">
+      <span class="greeting" dir="auto">Kaixo</span>
+      <span class="language" dir="auto">Euskara</span>
+    </div>
+    <div class="word edge-left" style="left:1.5%; top:88.58%; --tilt:6.2deg; animation-delay:-80s">
+      <span class="greeting" dir="auto">Ola</span>
+      <span class="language" dir="auto">Galego</span>
+    </div>
+    <div class="word" style="left:63.53%; top:64.27%; --tilt:-3.7deg; animation-delay:-46s">
+      <span class="greeting" dir="auto">Dia duit</span>
+      <span class="language" dir="auto">Gaeilge</span>
+    </div>
+    <div class="word" style="left:10.31%; top:25.14%; --tilt:2.5deg; animation-delay:-138s">
+      <span class="greeting" dir="auto">Helo</span>
+      <span class="language" dir="auto">Cymraeg</span>
+    </div>
+    <div class="word" style="left:29.85%; top:35.04%; --tilt:-6.6deg; animation-delay:-120s">
+      <span class="greeting" dir="auto">Halò</span>
+      <span class="language" dir="auto">Gàidhlig</span>
+    </div>
+    <div class="word edge-right" style="right:1.5%; top:13.34%; --tilt:-2.6deg; animation-delay:-22s">
+      <span class="greeting" dir="auto">Përshëndetje</span>
+      <span class="language" dir="auto">Shqip</span>
+    </div>
+    <div class="word" style="left:71.38%; top:78.76%; --tilt:4.4deg; animation-delay:-76s">
+      <span class="greeting" dir="auto">Здраво</span>
+      <span class="language" dir="auto">Македонски</span>
+    </div>
+    <div class="word" style="left:29.96%; top:26.37%; --tilt:6.8deg; animation-delay:-162s">
+      <span class="greeting" dir="auto">Բարև</span>
+      <span class="language" dir="auto">Հայերեն</span>
+    </div>
+    <div class="word edge-right" style="right:1.5%; top:47.15%; --tilt:1.3deg; animation-delay:-10s">
+      <span class="greeting" dir="auto">გამარჯობა</span>
+      <span class="language" dir="auto">ქართული</span>
+    </div>
+    <div class="word" style="left:11.76%; top:63.91%; --tilt:4.4deg; animation-delay:-50s">
+      <span class="greeting" dir="auto">Salam</span>
+      <span class="language" dir="auto">Azərbaycan</span>
+    </div>
+    <div class="word" style="left:88.91%; top:35.63%; --tilt:-4.8deg; animation-delay:-160s">
+      <span class="greeting" dir="auto">Сәлеметсіз бе</span>
+      <span class="language" dir="auto">Қазақ</span>
+    </div>
+    <div class="word" style="left:29.30%; top:73.69%; --tilt:6.7deg; animation-delay:-12s">
+      <span class="greeting" dir="auto">Salom</span>
+      <span class="language" dir="auto">Oʻzbek</span>
+    </div>
+    <div class="word" style="left:29.50%; top:8.23%; --tilt:6.0deg; animation-delay:-116s">
+      <span class="greeting" dir="auto">Salam</span>
+      <span class="language" dir="auto">Türkmen</span>
+    </div>
+    <div class="word" style="left:35.71%; top:35.37%; --tilt:-4.1deg; animation-delay:-26s">
+      <span class="greeting" dir="auto">Saluton</span>
+      <span class="language" dir="auto">Esperanto</span>
+    </div>
+    <div class="word" style="left:10.17%; top:88.37%; --tilt:2.3deg; animation-delay:-130s">
+      <span class="greeting" dir="auto">Salve</span>
+      <span class="language" dir="auto">Latina</span>
+    </div>
+    <div class="word" style="left:88.83%; top:65.89%; --tilt:-4.1deg; animation-delay:-148s">
+      <span class="greeting" dir="auto">Aloha</span>
+      <span class="language" dir="auto">ʻŌlelo Hawaiʻi</span>
+    </div>
+    <div class="word edge-right" style="right:1.5%; top:39.46%; --tilt:3.2deg; animation-delay:-36s">
+      <span class="greeting" dir="auto">Kia ora</span>
+      <span class="language" dir="auto">Te Reo Māori</span>
+    </div>
+    <div class="word" style="left:19.75%; top:36.33%; --tilt:-1.3deg; animation-delay:-8s">
+      <span class="greeting" dir="auto">Talofa</span>
+      <span class="language" dir="auto">Gagana Sāmoa</span>
+    </div>
+    <div class="word" style="left:55.01%; top:51.62%; --tilt:5.2deg; animation-delay:-152s">
+      <span class="greeting" dir="auto">Bula</span>
+      <span class="language" dir="auto">Na Vosa Vakaviti</span>
+    </div>
+    <div class="word" style="left:87.12%; top:51.42%; --tilt:-6.8deg; animation-delay:-38s">
+      <span class="greeting" dir="auto">Mālō e lelei</span>
+      <span class="language" dir="auto">Lea faka-Tonga</span>
+    </div>
 </body>
 </html>
