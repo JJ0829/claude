@@ -3,27 +3,293 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hello</title>
+  <title>Hello — 세계의 인사말</title>
   <style>
-    html, body {
-      height: 100%;
-      margin: 0;
+    :root {
+      --bg: #fafafa;
+      --card: #ffffff;
+      --border: #e4e4e7;
+      --text: #18181b;
+      --muted: #71717a;
+      --accent: #2563eb;
     }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0b0b0f;
+        --card: #16161c;
+        --border: #26262e;
+        --text: #f4f4f5;
+        --muted: #a1a1aa;
+        --accent: #60a5fa;
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body { margin: 0; padding: 0; }
+
     body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto,
+                   "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem 5rem;
+    }
+
+    /* --- 상단: 인사말이 차례로 바뀌는 영역 --- */
+    .hero {
+      min-height: 60vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: #f5f5f5;
-      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      text-align: center;
+      gap: 1rem;
     }
-    h1 {
-      font-size: 4rem;
-      color: #222;
+
+    .hero-greeting {
+      font-size: clamp(2.75rem, 11vw, 6rem);
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin: 0;
+      transition: opacity 0.5s ease;
+      word-break: keep-all;
+    }
+
+    .hero-language {
+      font-size: 1rem;
+      color: var(--muted);
+      transition: opacity 0.5s ease;
       margin: 0;
     }
+
+    .fading { opacity: 0; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-greeting, .hero-language { transition: none; }
+    }
+
+    /* --- 목록 --- */
+    .section-title {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 1rem;
+      border-top: 1px solid var(--border);
+      padding-top: 2rem;
+      margin-bottom: 1.75rem;
+      flex-wrap: wrap;
+    }
+
+    .section-title h2 {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .count {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 0.75rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .grid li {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      min-width: 0;
+    }
+
+    .greeting {
+      font-size: 1.3rem;
+      font-weight: 500;
+      overflow-wrap: anywhere;
+    }
+
+    .language {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    footer a { color: var(--accent); }
   </style>
 </head>
 <body>
-  <h1>hello</h1>
+  <main>
+    <div class="hero">
+      <p class="hero-greeting" id="heroGreeting" dir="auto">hello</p>
+      <p class="hero-language" id="heroLanguage">English</p>
+    </div>
+
+    <div class="section-title">
+      <h2>세계의 인사말</h2>
+      <span class="count" id="count"></span>
+    </div>
+
+    <ul class="grid" id="grid"></ul>
+
+    <footer>
+      <a href="https://github.com/JJ0829/claude">github.com/JJ0829/claude</a>
+    </footer>
+  </main>
+
+  <script>
+    const GREETINGS = [
+      ["안녕하세요", "한국어"],
+      ["Hello", "English"],
+      ["こんにちは", "日本語"],
+      ["你好", "中文"],
+      ["Hola", "Español"],
+      ["Bonjour", "Français"],
+      ["Hallo", "Deutsch"],
+      ["Ciao", "Italiano"],
+      ["Olá", "Português"],
+      ["Здравствуйте", "Русский"],
+      ["مرحبا", "العربية"],
+      ["नमस्ते", "हिन्दी"],
+      ["নমস্কার", "বাংলা"],
+      ["สวัสดี", "ไทย"],
+      ["Xin chào", "Tiếng Việt"],
+      ["Halo", "Bahasa Indonesia"],
+      ["Helo", "Bahasa Melayu"],
+      ["Kumusta", "Filipino"],
+      ["Merhaba", "Türkçe"],
+      ["Γειά σου", "Ελληνικά"],
+      ["Hallo", "Nederlands"],
+      ["Hej", "Svenska"],
+      ["Hei", "Norsk"],
+      ["Hej", "Dansk"],
+      ["Hei", "Suomi"],
+      ["Halló", "Íslenska"],
+      ["Cześć", "Polski"],
+      ["Ahoj", "Čeština"],
+      ["Ahoj", "Slovenčina"],
+      ["Szia", "Magyar"],
+      ["Bună", "Română"],
+      ["Здравейте", "Български"],
+      ["Привіт", "Українська"],
+      ["Bok", "Hrvatski"],
+      ["Здраво", "Српски"],
+      ["Živjo", "Slovenščina"],
+      ["Labas", "Lietuvių"],
+      ["Sveiki", "Latviešu"],
+      ["Tere", "Eesti"],
+      ["שלום", "עברית"],
+      ["سلام", "فارسی"],
+      ["السلام علیکم", "اردو"],
+      ["வணக்கம்", "தமிழ்"],
+      ["నమస్కారం", "తెలుగు"],
+      ["ನಮಸ್ಕಾರ", "ಕನ್ನಡ"],
+      ["നമസ്കാരം", "മലയാളം"],
+      ["નમસ્તે", "ગુજરાતી"],
+      ["ਸਤ ਸ੍ਰੀ ਅਕਾਲ", "ਪੰਜਾਬੀ"],
+      ["नमस्कार", "मराठी"],
+      ["नमस्ते", "नेपाली"],
+      ["ආයුබෝවන්", "සිංහල"],
+      ["မင်္ဂလာပါ", "မြန်မာ"],
+      ["សួស្តី", "ភាសាខ្មែរ"],
+      ["ສະບາຍດີ", "ລາວ"],
+      ["Сайн байна уу", "Монгол"],
+      ["Jambo", "Kiswahili"],
+      ["ሰላም", "አማርኛ"],
+      ["Bawo ni", "Yorùbá"],
+      ["Sawubona", "isiZulu"],
+      ["Hallo", "Afrikaans"],
+      ["Sannu", "Hausa"],
+      ["Salaan", "Soomaali"],
+      ["Salama", "Malagasy"],
+      ["Hola", "Català"],
+      ["Kaixo", "Euskara"],
+      ["Ola", "Galego"],
+      ["Dia duit", "Gaeilge"],
+      ["Helo", "Cymraeg"],
+      ["Halò", "Gàidhlig"],
+      ["Përshëndetje", "Shqip"],
+      ["Здраво", "Македонски"],
+      ["Բարև", "Հայերեն"],
+      ["გამარჯობა", "ქართული"],
+      ["Salam", "Azərbaycan"],
+      ["Сәлеметсіз бе", "Қазақ"],
+      ["Salom", "Oʻzbek"],
+      ["Salam", "Türkmen"],
+      ["Saluton", "Esperanto"],
+      ["Salve", "Latina"],
+      ["Aloha", "ʻŌlelo Hawaiʻi"],
+      ["Kia ora", "Te Reo Māori"],
+      ["Talofa", "Gagana Sāmoa"],
+      ["Bula", "Na Vosa Vakaviti"],
+      ["Mālō e lelei", "Lea faka-Tonga"]
+    ];
+
+    // 목록 그리기
+    const grid = document.getElementById("grid");
+    for (const [greeting, language] of GREETINGS) {
+      const li = document.createElement("li");
+
+      const g = document.createElement("span");
+      g.className = "greeting";
+      g.dir = "auto";
+      g.textContent = greeting;
+
+      const l = document.createElement("span");
+      l.className = "language";
+      l.dir = "auto";
+      l.textContent = language;
+
+      li.append(g, l);
+      grid.append(li);
+    }
+
+    document.getElementById("count").textContent = GREETINGS.length + "개 언어";
+
+    // 상단 인사말을 하나씩 순서대로 보여준다
+    const heroGreeting = document.getElementById("heroGreeting");
+    const heroLanguage = document.getElementById("heroLanguage");
+    let index = 0;
+
+    setInterval(() => {
+      heroGreeting.classList.add("fading");
+      heroLanguage.classList.add("fading");
+
+      setTimeout(() => {
+        index = (index + 1) % GREETINGS.length;
+        const [greeting, language] = GREETINGS[index];
+        heroGreeting.textContent = greeting;
+        heroLanguage.textContent = language;
+        heroGreeting.classList.remove("fading");
+        heroLanguage.classList.remove("fading");
+      }, 500);
+    }, 2500);
+  </script>
 </body>
 </html>
